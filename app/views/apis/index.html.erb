@@ -31,8 +31,15 @@
     <input type="text" id="PubIB" name="PubIB" placeholder="ex: 123456">
     <input type="submit" value="Submit">
   </form>
-</div>
 
+
+
+  <%= form_tag("/process_api", method: "get") do %>
+    <%= label_tag(:pubId, "Enter PubID:") %>
+    <%= text_field_tag(:pubId) %>
+    <%= submit_tag("Submit") %>
+  <% end %>
+</div>
 
 <br>
 <!--
