@@ -1,35 +1,64 @@
-require 'net/http'
-#require 'google/cloud/text_to_speech'
-require 'pdf-reader'
-
 class ApisController < ApplicationController
   before_action :set_api, only: %i[ show edit update destroy ]
 
+  require 'net/http'
+  require 'google/cloud/text_to_speech'
+  require 'pdf-reader'
+  
   def convert_to_speech
+    text = params[:text]
+    output_file = Rails.root.join('public', 'output.mp3')
+
+    # Replace with your Google Cloud project ID and API key
+    project_id = ENV['TEXT_TO_SPEECH_PROJECT_ID']
+    api_key = ENV['TEXT_TO_SPEECH_PRIVATE_KEY']
+
+    # Initialize the Text-to-Speech client with your API key
+    client = Google::Cloud::TextToSpeech.new project: project_id, credentials: api_key
+
+    # Generate the audio file using the Text-to-Speech client
+    synthesis_input = { text: text }
+    voice = { language_code: 'en-US', ssml_gender: 'FEMALE' }
+    audio_config = { audio_encoding: 'MP3' }
+    response = client.synthesize_speech input: synthesis_input, voice: voice, audio_config: audio_config
+
+    # Write the audio file to disk
+    File.write(output_file, response.audio_content, mode: 'wb')
+
+    # Render a JSON response with the path to the audio file
+    render json: { audio_path: 'audio_outputs/output.mp3' }
+
+
+
+
+
+
+
+
     # PubMed API endpoint URL
-    pubmed_api_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=#{params[:id]}&rettype=abstract&retmode=text"
+    #pubmed_api_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=#{pubmedId}&rettype=abstract&retmode=text"
 
     # Make a request to the PubMed API
-    uri = URI(pubmed_api_url)
-    response = Net::HTTP.get(uri)
+    #uri = URI(pubmed_api_url)
+    #response = Net::HTTP.get(uri)
 
     # Extract the article content
     #article_content = response.match(/Abstract(.|\n)*/)[0].strip
 
-    input_text = response.match(/Title: (.*)\n/)[1] # assuming that the title is on the first line
+    #input_text = response.match(/Title: (.*)\n/)[1] # assuming that the title is on the first line
 
 
     # Initialize Google Cloud Text-to-Speech client
     #text_to_speech = Google::Cloud::TextToSpeech.new
 
     # Convert article content to speech
-    synthesis_input = { text: input_text }
-    voice = { language_code: 'en-US', ssml_gender: 'NEUTRAL' }
-    audio_config = { audio_encoding: 'MP3' }
+    #synthesis_input = { text: input_text }
+    #voice = { language_code: 'en-US', ssml_gender: 'NEUTRAL' }
+    #audio_config = { audio_encoding: 'MP3' }
     #response = text_to_speech.synthesize_speech(synthesis_input, voice, audio_config)
 
     # Save the speech audio to a file
-    File.open("#{params[:id]}.mp3", 'wb') { |file| file.write(response.audio_content) }
+    #File.open("#{params[:pubId]}.mp3", 'wb') { |file| file.write(response.audio_content) }
   end
 
 

@@ -1,6 +1,6 @@
 {
   "type": "service_account",
-  "project_id": “TEXT_TO_SPEECH_PROJECT_ID,
+  "project_id": “TEXT_TO_SPEECH_PROJECT_ID",
   "private_key_id": "TEXT_TO_SPEECH_KEY_ID",
   "private_key": "-----BEGIN PRIVATE KEY-----TEXT_TO_SPEECH_PRIVATE_KEY-----END PRIVATE KEY-----\n",
   "client_email": "TEXT_TO_SPEECH_CLIENT_EMAIL",
