@@ -17,7 +17,7 @@ gem 'devise'
 gem 'webpacker'
 gem 'react-rails'
 gem 'pdf-reader'
-gem 'google-cloud-text_to_speech-v1'
+gem 'google-cloud-text_to_speech'
 
 group :development do
   gem 'htmlbeautifier'
