@@ -19,6 +19,7 @@ gem 'react-rails'
 gem 'pdf-reader'
 gem 'google-cloud-text_to_speech'
 gem 'json'
+gem 'google-api-client'
 
 group :development do
   gem 'htmlbeautifier'

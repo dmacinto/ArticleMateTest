@@ -8,7 +8,7 @@ class ApisController < ApplicationController
 
   def convert_to_speech
     text = params[:text]
-    output_file = Rails.root.join('public', 'output.mp3')
+    output_file = Rails.root.join('app/audio_outputs', 'output.mp3')
 
     # Replace with your Google Cloud project ID and API key
 
@@ -24,6 +24,7 @@ class ApisController < ApplicationController
       "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
       "client_x509_cert_url": "#{ENV.fetch("TEXT_TO_SPEECH_CLIENT_URL")}"
     }
+    
     google_json = JSON.generate(google_credentials)
 
     # Initialize the Text-to-Speech client with your API key
@@ -43,7 +44,7 @@ class ApisController < ApplicationController
     File.write(output_file, response.audio_content, mode: 'wb')
 
     # Render a JSON response with the path to the audio file
-    render json: { audio_path: 'audio_outputs/output.mp3' }
+    render json: { audio_path: 'app/audio_outputs/output.mp3' }
 
 
 
