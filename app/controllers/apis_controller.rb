@@ -4,18 +4,31 @@ class ApisController < ApplicationController
   require 'net/http'
   require 'google/cloud/text_to_speech'
   require 'pdf-reader'
-  
+  require 'json'
+
   def convert_to_speech
     text = params[:text]
     output_file = Rails.root.join('public', 'output.mp3')
 
     # Replace with your Google Cloud project ID and API key
-    project_id = ENV['TEXT_TO_SPEECH_PROJECT_ID']
-    api_key = ENV['TEXT_TO_SPEECH_PRIVATE_KEY']
+
+    google_credentials = {
+      "type": "service_account",
+      "project_id": "#{ENV.fetch("TEXT_TO_SPEECH_PROJECT_ID")}",
+      "private_key_id": "#{ENV.fetch("TEXT_TO_SPEECH_KEY_ID")}",
+      "private_key": "-----BEGIN PRIVATE KEY-----#{ENV.fetch("TEXT_TO_SPEECH_PRIVATE_KEY")}-----END PRIVATE KEY-----\n",
+      "client_email": "#{ENV.fetch("TEXT_TO_SPEECH_CLIENT_EMAIL")}",
+      "client_id": "#{ENV.fetch("TEXT_TO_SPEECH_CLIENT_ID")}",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "#{ENV.fetch("TEXT_TO_SPEECH_CLIENT_URL")}"
+    }
+    google_json = JSON.generate(google_credentials)
 
     # Initialize the Text-to-Speech client with your API key
     client = Google::Cloud::TextToSpeech.text_to_speech do |config|
-      config.credentials = "/keyfile.json"
+      config.credentials = google_credentials
     end
 
     #client = Google::Cloud::TextToSpeech.text_to_speech #project: project_id, credentials: api_key
