@@ -18,6 +18,7 @@ gem 'webpacker'
 gem 'react-rails'
 gem 'pdf-reader'
 gem 'google-cloud-text_to_speech'
+gem 'json'
 
 group :development do
   gem 'htmlbeautifier'

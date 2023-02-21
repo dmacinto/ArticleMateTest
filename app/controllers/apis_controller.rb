@@ -14,7 +14,11 @@ class ApisController < ApplicationController
     api_key = ENV['TEXT_TO_SPEECH_PRIVATE_KEY']
 
     # Initialize the Text-to-Speech client with your API key
-    client = Google::Cloud::TextToSpeech.new project: project_id, credentials: api_key
+    client = Google::Cloud::TextToSpeech.text_to_speech do |config|
+      config.credentials = "/keyfile.json"
+    end
+
+    #client = Google::Cloud::TextToSpeech.text_to_speech #project: project_id, credentials: api_key
 
     # Generate the audio file using the Text-to-Speech client
     synthesis_input = { text: text }
