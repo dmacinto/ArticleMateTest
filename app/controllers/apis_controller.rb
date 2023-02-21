@@ -25,7 +25,7 @@ class ApisController < ApplicationController
       "client_x509_cert_url": "#{ENV.fetch("TEXT_TO_SPEECH_CLIENT_URL")}"
     }
     
-    google_json = JSON.generate(google_credentials)
+    #google_json = JSON.generate(google_credentials)
 
     # Initialize the Text-to-Speech client with your API key
     client = Google::Cloud::TextToSpeech.text_to_speech do |config|
