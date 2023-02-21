@@ -20,6 +20,7 @@ gem 'pdf-reader'
 gem 'google-cloud-text_to_speech'
 gem 'json'
 gem 'google-api-client'
+gem "turbo-rails", "~> 1.3"
 
 group :development do
   gem 'htmlbeautifier'

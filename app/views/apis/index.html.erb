@@ -9,27 +9,29 @@
     <%#= text_field_tag(:pubId) %>
     <%= submit_tag("Submit") %>
   <% end %>
-</div>
-<div id="audio-player"></div>
 
-<script>
-  // Handle the form submission
-  document.querySelector('form').addEventListener('submit', async (event) => {
-    event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const response = await fetch('/convert_to_speech', {
-      method: 'POST',
-      body: formData
+
+  <div id="audio-player"></div>
+
+  <script>
+    // Handle the form submission
+    document.querySelector('form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const response = await fetch('/convert_to_speech', {
+        method: 'POST',
+        body: formData
+      });
+      const { audio_path } = await response.json();
+
+      // Add an audio player to the page
+      const audioPlayer = document.createElement('audio');
+      audioPlayer.src = audio_path;
+      audioPlayer.controls = true;
+      document.getElementById('audio-player').appendChild(audioPlayer);
     });
-    const { audio_path } = await response.json();
-
-    // Add an audio player to the page
-    const audioPlayer = document.createElement('audio');
-    audioPlayer.src = audio_path;
-    audioPlayer.controls = true;
-    document.getElementById('audio-player').appendChild(audioPlayer);
-  });
-</script>
-
+  </script>
+</div>
 <br>
