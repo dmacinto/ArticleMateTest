@@ -16,6 +16,7 @@ gem 'faker'
 gem 'devise'
 gem 'webpacker'
 gem 'react-rails'
+gem 'pdf-reader'
 
 group :development do
   gem 'htmlbeautifier'

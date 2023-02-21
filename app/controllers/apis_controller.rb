@@ -1,5 +1,6 @@
 require 'net/http'
-require 'google/cloud/text_to_speech'
+#require 'google/cloud/text_to_speech'
+require 'pdf-reader'
 
 class ApisController < ApplicationController
   before_action :set_api, only: %i[ show edit update destroy ]
@@ -19,13 +20,13 @@ class ApisController < ApplicationController
 
 
     # Initialize Google Cloud Text-to-Speech client
-    text_to_speech = Google::Cloud::TextToSpeech.new
+    #text_to_speech = Google::Cloud::TextToSpeech.new
 
     # Convert article content to speech
     synthesis_input = { text: input_text }
     voice = { language_code: 'en-US', ssml_gender: 'NEUTRAL' }
     audio_config = { audio_encoding: 'MP3' }
-    response = text_to_speech.synthesize_speech(synthesis_input, voice, audio_config)
+    #response = text_to_speech.synthesize_speech(synthesis_input, voice, audio_config)
 
     # Save the speech audio to a file
     File.open("#{params[:id]}.mp3", 'wb') { |file| file.write(response.audio_content) }
@@ -34,6 +35,26 @@ class ApisController < ApplicationController
 
 
 
+  def convert
+    pdf_file = params[:file]
+    if pdf_file.content_type == 'application/pdf'
+      reader = PDF::Reader.new(pdf_file.path)
+      text = reader.pages.map(&:text).join("\n")
+      File.open('converted_text.txt', 'w') { |file| file.write(text) }
+      send_file('converted_text.txt')
+    else
+      flash[:alert] = 'Invalid file type. Please upload a PDF file.'
+      redirect_to root_path
+    end
+  end
+
+
+
+
+
+
+
+  
 
 
 
