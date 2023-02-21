@@ -4,7 +4,6 @@ require 'google/cloud/text_to_speech'
 class ApisController < ApplicationController
   before_action :set_api, only: %i[ show edit update destroy ]
 
-
   def convert_to_speech
     # PubMed API endpoint URL
     pubmed_api_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=#{params[:id]}&rettype=abstract&retmode=text"
@@ -13,11 +12,16 @@ class ApisController < ApplicationController
     uri = URI(pubmed_api_url)
     response = Net::HTTP.get(uri)
 
+    # Extract the article content
+    #article_content = response.match(/Abstract(.|\n)*/)[0].strip
+
+    input_text = response.match(/Title: (.*)\n/)[1] # assuming that the title is on the first line
+
+
     # Initialize Google Cloud Text-to-Speech client
     text_to_speech = Google::Cloud::TextToSpeech.new
 
-    # Convert article title to speech
-    input_text = response.match(/Title: (.*)\n/)[1] # assuming that the title is on the first line
+    # Convert article content to speech
     synthesis_input = { text: input_text }
     voice = { language_code: 'en-US', ssml_gender: 'NEUTRAL' }
     audio_config = { audio_encoding: 'MP3' }
@@ -26,8 +30,6 @@ class ApisController < ApplicationController
     # Save the speech audio to a file
     File.open("#{params[:id]}.mp3", 'wb') { |file| file.write(response.audio_content) }
   end
-
-end
 
 
 
